@@ -1,11 +1,11 @@
 import React from 'react'
 
-const colaborador = () => {
+const Colaborador = () => {
   return (
-    <div>
-      
+    <div style={{background:"red", width:"100%"}} >
+      Hola soy tu componente para colaborador
     </div>
   )
 }
 
-export default colaborador
+export default Colaborador
