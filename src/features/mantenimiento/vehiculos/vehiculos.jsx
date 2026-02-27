@@ -1,11 +1,110 @@
-import React from 'react'
+import { Box } from "@mui/material";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect, useMemo, useState } from "react";
+import { MaterialReactTable } from "material-react-table";
+
+//redux 
+import { getVehiculo, deleteVehiculo } from "../../../redux/mantenimiento/vehiculo/actions";
+
+//importación de hooks
+import { useConfiguredTable } from "../../../hooks/useConfiguredTable";
+import { useActionCell } from "../../../hooks/useActionCell";
+
+//componentes complementarios
+import HeaderManten from "../../../components/mantenimiento/header";
+import FormDialog from "./formDialog";
+
+//importación de alertas
+import swal from "sweetalert";
 
 const Vehiculos = () => {
-  return (
-    <div style={{background:"red", width:"100%"}} >
-      Hola soy tu componente para vehiculos
-    </div>
-  )
+
+    //redux
+    const dispatch = useDispatch();
+    const vehiculos = useSelector((state) => state.vehiculo.vehiculos);
+    const loading = useSelector((state) => state.vehiculo.saveLoading);
+
+    //declaracion de estados en react
+    const [showModal, setShowModal] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
+    const [editItem, setEditItem] = useState({});
+
+    //llamado del api cuando se monete el componente
+    useEffect(() => {
+      dispatch(getVehiculo());
+    },[dispatch]);
+
+    console.log("Listado de vehiculos", vehiculos);
+
+    const handleAdd = () => {
+      setShowModal(true);
+      setIsEdit(false);
+      setEditItem(null);
+    };
+
+    const handleEdit = (data, index) => {
+      console.log("Esta es la data a editar", data , "Este es el index", index); 
+      setShowModal(true);
+      setIsEdit(true);
+      setEditItem({data, index});
+    };
+
+    const handleDelete = (data, index) => {
+      swal({
+        title:"¿Estas seguro de eliminar este registro?",
+        text: "Una vez eliminado no podrá recuperarlo",
+        icon:"warning",
+        buttons: true,
+        dangerMode: true,
+      }) 
+        .then((willDelete) => {
+          if (willDelete) {
+            data.estado = false;
+            dispatch(deleteVehiculo(data, data.id, index));
+          }
+        });
+    };
+
+    //declaración de variable que contendrá el hook actionCell
+    const actionCell = useActionCell({ handleEdit, handleDelete });
+
+    //Definición de columnas
+    const columns = useMemo(()=>[
+        {accessorKey: 'id', header:"ID"},
+        {accessorKey: 'marca', header:"Marca"},
+        {accessorKey: 'modelo', header:"Modelo"},
+        {accessorKey: 'placa', header:"Placa"},
+        {
+          id:'acciones',
+          header:'Acciones',
+          Cell: actionCell,
+        }
+    ],[actionCell]);
+
+    const table = useConfiguredTable(columns, vehiculos,{
+        loading,
+    });
+
+    return(
+      <div
+        style={{
+            width : "95%",
+            height : "100%",
+        }}
+      >
+        <HeaderManten handleAdd={handleAdd}/>
+        <FormDialog 
+          showModal={showModal}
+          setShowModal={setShowModal}
+          initialData={editItem}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
+        />
+        <Box sx={{padding:"2%"}}>
+          <MaterialReactTable table={table}/>
+        </Box>
+      </div>
+    )
 }
 
-export default Vehiculos
+export default Vehiculos;
