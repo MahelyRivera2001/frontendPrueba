@@ -100,7 +100,7 @@ const Vehiculos = () => {
           isEdit={isEdit}
           setIsEdit={setIsEdit}
         />
-        <Box sx={{padding:"2%"}}>
+        <Box sx={{padding:"2%", maxWidth:{xs:450, sm:500, md:800, lg:1300}}}>
           <MaterialReactTable table={table}/>
         </Box>
       </div>

@@ -12,6 +12,12 @@ export const useConfiguredTable = (columns, data, options = {}) => {
             isSaving: options.saveLoading,
             showProgressBars: options.loading,
         },
+        muiTableContainerProps : {
+            sx:{
+                maxWidth: "100%",
+                overflowX: "auto",
+            }
+        },
         ...options,
     })
 }

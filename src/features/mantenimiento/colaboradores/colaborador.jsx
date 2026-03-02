@@ -86,8 +86,8 @@ const Colaborador = () => {
     return(
       <div
         style={{
-            width : "95%",
-            height : "100%",
+          width : "95%",
+          height : "100%",
         }}
       >
         <HeaderManten handleAdd={handleAdd}/>
@@ -98,7 +98,7 @@ const Colaborador = () => {
           isEdit={isEdit}
           setIsEdit={setIsEdit}
         />
-        <Box sx={{padding:"2%"}}>
+        <Box sx={{padding:"2%", maxWidth:{xs:300, sm:500, md:800, lg:1300}}}>
           <MaterialReactTable table={table}/>
         </Box>
       </div>
