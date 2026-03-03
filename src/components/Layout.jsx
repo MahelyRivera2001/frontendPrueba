@@ -1,84 +1,79 @@
-import { Drawer, Grid, IconButton, Paper, useMediaQuery, useTheme} from "@mui/material";
+import { Drawer, Box, IconButton, Paper, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet, useLocation } from "react-router-dom";
 import Sidenav from "../components/SideNav";
-import routes from "../routes/router"; // array de rutas
-
-//manejo de estados
+import routes from "../routes/router";
 import { useState, useEffect } from "react";
+import MenuIcon from "@mui/icons-material/Menu";
 
-//iconos 
-import MenuIcon from '@mui/icons-material/Menu';
+const drawerWidth = 240;
 
 export default function Layout() {
   const theme = useTheme();
-  const isSmDown = useMediaQuery(theme.breakpoints.down("sm")); //xs , sm
+  const isSmDown = useMediaQuery(theme.breakpoints.down("sm"));
   const [openDrawer, setOpenDrawer] = useState(false);
   const location = useLocation();
 
   const toggleDrawer = () => setOpenDrawer(!openDrawer);
 
-  //cierre del drawer al cambiar de ruta en móviles
   useEffect(() => {
     if (isSmDown) {
       setOpenDrawer(false);
     } else {
       setOpenDrawer(true);
     }
-  }, [location.pathname, isSmDown])
+  }, [location.pathname, isSmDown]);
 
   return (
-    <Grid container sx={{ height: "100vh" }}>
+    <Box sx={{ display: "flex", height: "100vh" }}>
+      
+      {/* SIDENAV DESKTOP */}
       {!isSmDown && (
-        <Grid item sm={3} sx={{ borderRight: "1px solid #ddd", bgcolor: "#fff" }}>
-          <Sidenav routes={routes} />
-        </Grid>
+        <Sidenav routes={routes} />
       )}
-      {/* content */}
-      <Grid
+
+      {/* CONTENIDO */}
+      <Box
         sx={{
-          flexGrow:1,
+          flexGrow: 1,
           display: "flex",
           flexDirection: "column",
           bgcolor: "#f5f5f5",
+          width: isSmDown ? "100%" : `calc(100% - ${drawerWidth}px)`,
         }}
       >
         {/* Navbar */}
         <Paper
           sx={{
             height: 64,
-            bgcolor: "white",
-            color: "white",
             display: "flex",
             alignItems: "center",
-            justifyContent: "center",
-            width: "100%",
+            px: 2,
           }}
         >
-          {/* botón hamburguesa solo para móviles */}
           {isSmDown && (
-            <IconButton onClick={toggleDrawer} size="large">
+            <IconButton onClick={toggleDrawer}>
               <MenuIcon />
-              <span> Navbar </span>
             </IconButton>
           )}
         </Paper>
-        {/* Contenido */}
-        <Grid sx={{ flex: 1, p: {xs: 1, sm: 2, md: 3, xl:3}}}>
-          <Outlet /> {/* renderización del componente según la ruta */}
-        </Grid>
-      </Grid>
 
-      {/* Drawer para moviles */}
+        {/* Contenido */}
+        <Box sx={{ flex: 1, overflow:"hidden"}}>
+          <Outlet />
+        </Box>
+      </Box>
+
+      {/* Drawer móvil */}
       {isSmDown && (
         <Drawer
           open={openDrawer}
           onClose={toggleDrawer}
           variant="temporary"
-          ModalProps={{ keepMounted: true}}
+          ModalProps={{ keepMounted: true }}
         >
           <Sidenav routes={routes} />
         </Drawer>
       )}
-    </Grid>
+    </Box>
   );
 }

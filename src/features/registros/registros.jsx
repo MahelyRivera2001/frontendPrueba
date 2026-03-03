@@ -42,6 +42,7 @@ const Registros = () => {
       {accessorKey: 'Vehiculo.marca', header:"Vehiculo"},
       {accessorKey: 'Vehiculo.placa', header:"Placa"},
       {accessorKey: 'kilometraje', header:"kilometraje"},
+      {accessorKey: 'Colaborador.nombre', header:"Colaborador"},
       {accessorKey: 'tipo', header:"Tipo"},
       {accessorKey: 'fecha', header:"Fecha"},
       {accessorKey: 'hora', header:"Hora"},
@@ -54,7 +55,7 @@ const Registros = () => {
     return(
       <div
         style={{
-            width : "95%",
+            width : "100%",
             height : "100%",
         }}
       >
@@ -63,7 +64,7 @@ const Registros = () => {
           showModal={showModal}
           setShowModal={setShowModal}
         />
-        <Box sx={{padding:"2%", maxWidth:{xs:300, sm:500, md:800, lg:1300}}}>
+        <Box sx={{padding:"2%", maxWidth:{xs:"95%", sm:"95%", md:"95%", lg:"95%"}}}>
           <MaterialReactTable table={table}/>
         </Box>
       </div>
